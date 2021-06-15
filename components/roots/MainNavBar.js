@@ -6,7 +6,9 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import Link from 'next/link'
+import Link from 'next/link';
+import { signIn, signOut, useSession } from 'next-auth/client'
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -21,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MainNavBar() {
   const classes = useStyles();
+  const [ session, loading ] = useSession()
 
   return (
     <div className={classes.root}>
@@ -35,9 +38,15 @@ export default function MainNavBar() {
             </Link>
           </Typography>
           <Button color="inherit">
-          <Link href="/login">
-            Se connecter
-            </Link>
+          {!session && <>
+            <Link href="/login">
+              Se connecter
+              </Link>
+            </>}
+            {session && <>
+              <button onClick={() => signOut()}>Sign out</button>
+              </>}
+
           </Button>
         </Toolbar>
       </AppBar>

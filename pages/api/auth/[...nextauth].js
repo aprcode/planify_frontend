@@ -4,25 +4,39 @@ import axios from 'axios'
 
 const providers= [
   Providers.Credentials({
-
-    pages: {
-      signIn: '/login',
-
-    },
     async authorize(credentials) {
       // Here call your API with data passed in the login form
-      console.log(credentials);
+      try {
 
-      axios.post('localhost:8080/users/signup', {
-          email: credentials.email,
-          password: credentials.password
+      const user = await axios.post('http://localhost:8080/users/login',
+        {
+
+            password: credentials.password,
+            email: credentials.email
+
+        },
+        {
+          headers: {
+            accept: '*/*',
+            'Content-Type': 'application/json'
+          }
         })
-        .then(function (response) {
-          console.log(res.json(response.data));
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+        console.log(user)
+        if (user) {
+          // Any object returned will be saved in `user` property of the JWT
+          return user
+        } else {
+          // If you return null or false then the credentials will be rejected
+          return null
+          // You can also Reject this callback with an Error or with a URL:
+          // throw new Error('error message') // Redirect to error page
+          // throw '/path/to/redirect'        // Redirect to a URL
+        }
+          } catch (e) {
+          const errorMessage = e.response.data.message
+          // Redirecting to the login page with error message          in the URL
+          throw new Error(errorMessage + '&email=' + credentials.email)
+          }
       // if (token) {
       //   return token
       // } else {
@@ -51,7 +65,13 @@ const callbacks = {
 
 const options = {
   providers,
-  callbacks
+  callbacks,
+  pages: {
+    signIn: '/login',
+    signIn: '/login',
+    error: '/login',
+
+  },
 }
 
 export default (req, res) => NextAuth(req, res, options)

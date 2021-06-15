@@ -13,6 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { getCsrfToken } from 'next-auth/client'
+import queryString from 'query-string'
+import { useLocation } from 'react-router-dom'
 
 function Copyright() {
   return (
@@ -49,6 +51,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Login({ csrfToken }) {
   const classes = useStyles();
+  const { search } = useLocation()
+  const values = queryString.parse(search)
 
   return (
     <Container component="main" maxWidth="xs">

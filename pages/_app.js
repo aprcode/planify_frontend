@@ -5,6 +5,7 @@ import MainNavBar from '../components/roots/MainNavBar';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../src/theme';
+import { Provider } from 'next-auth/client'
 
 export default function MyApp(props) {
   const { Component, pageProps } = props;
@@ -19,6 +20,8 @@ export default function MyApp(props) {
 
   return (
     <React.Fragment>
+    <Provider session={pageProps.session}>
+
       <Head>
         <title>My page</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
@@ -28,6 +31,8 @@ export default function MyApp(props) {
         <MainNavBar />
         <Component {...pageProps} />
       </ThemeProvider>
+      </Provider>
+
     </React.Fragment>
   );
 }
